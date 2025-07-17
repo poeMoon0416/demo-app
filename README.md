@@ -54,7 +54,7 @@
 - Git Bashを使う(現在のブランチを表示してくれる)
 - Settings > Password and authentication > Authenticator app, Google AuthenticatorをスマホでダウンロードしてアカウントのMFAを設定
 - Settings > Developer Settings > Personal access tokens(classic), repo権限のトークンを作成(プライベートリポジトリのアクセスに必要)
-- [ユーザー名とメルアドの設定, リポジトリのクローン](https://docs.github.com/ja/get-started/git-basics/set-up-git), cloneとpullでダイアログ出るがブラウザログインで認証できる
+- [ユーザー名とメルアドの設定, リポジトリのクローン](https://docs.github.com/ja/get-started/git-basics/set-up-git), clone・pull・pushでダイアログ出るがブラウザログインで認証できる
 - .git: GitHubの設定(リモートoriginとブランチmain等), クローンすると取得できる
 - .gitignore: Git側で無視するファイルの設定, [参考URL](https://qiita.com/anqooqie/items/110957797b3d5280c44f)
 ### 操作
@@ -68,12 +68,12 @@
 - git branch --set-upstream-to=<リモート/リモートブランチ> <ローカルブランチ>: リモートブランチをローカルブランチに設定
 - git branch -d <ローカルブランチ>: ローカルブランチの削除
 - git pull: リモートのブランチの変更をローカルのブランチに取得
-  - git pull <リモート> <ブランチ
+  - git pull <リモート> <ブランチ>: デフォルトだとリモートがorigin, ブランチが現在のブランチ
 - git add <ファイル>: 変更をステージング(差分確認(git status, git diff))
   - git add -A: 全ての変更をステージング
 - git commit -m"<コミットメッセージ>": ステージングされた変更をローカルにコミット(コミット履歴確認(git log))
 - git push: コミットされた変更をリモートにプッシュ, [参考URL](https://qiita.com/shin4488/items/0bc36878eab39d5e499d)
-  - git push <リモート> <ブランチ>
+  - git push <リモート> <ブランチ>: デフォルトだとリモートがorigin, ブランチが現在のブランチ
 
 ## Docker Desktop
 - TODO

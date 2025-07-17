@@ -59,6 +59,11 @@
 - .gitignore: Git側で無視するファイルの設定, [参考URL](https://qiita.com/anqooqie/items/110957797b3d5280c44f)
 ### 操作
 - みえているファイルは現在のブランチの状態
+- チケットごとにブランチを切って開発
+- マージの手順
+  - baseブランチにマージしたいcompareブランチのPull Requestを作成
+  - Pull Requestに含まれる差分を確認
+  - 問題ないならマージする, クローズすればマージされない
 - git config --list: 設定の一覧
 - git config <設定> <値>: 設定の更新
 - git checkout -b <ローカルブランチ>: ローカルブランチの作成と移動

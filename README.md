@@ -58,6 +58,7 @@
 - .git: GitHubの設定(リモートoriginとブランチmain等), クローンすると取得できる
 - .gitignore: Git側で無視するファイルの設定, [参考URL](https://qiita.com/anqooqie/items/110957797b3d5280c44f)
 ### 操作
+- みえているファイルは現在のブランチの状態
 - git config --list: 設定の一覧
 - git config <設定> <値>: 設定の更新
 - git checkout -b <ローカルブランチ>: ローカルブランチの作成と移動

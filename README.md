@@ -1,4 +1,4 @@
-# demo-app
+# demo-app 自分用メモ
 - Ctrl+Shift+Vでプレビュー(VSCode)
 
 ## ディレクトリ構成
@@ -54,7 +54,7 @@
 - Git Bashを使う(現在のブランチを表示してくれる)
 - Settings > Password and authentication > Authenticator app, Google AuthenticatorをスマホでダウンロードしてアカウントのMFAを設定
 - Settings > Developer Settings > Personal access tokens(classic), repo権限のトークンを作成(プライベートリポジトリのアクセスに必要)
-- [ユーザー名とメルアドの設定, リポジトリのクローン](https://docs.github.com/ja/get-started/git-basics/set-up-git), クローンのときはブラウザログインで認証できる
+- [ユーザー名とメルアドの設定, リポジトリのクローン](https://docs.github.com/ja/get-started/git-basics/set-up-git), cloneとpullでダイアログ出るがブラウザログインで認証できる
 - .git: GitHubの設定(リモートoriginとブランチmain等), クローンすると取得できる
 - .gitignore: Git側で無視するファイルの設定, [参考URL](https://qiita.com/anqooqie/items/110957797b3d5280c44f)
 ### 操作
@@ -65,13 +65,15 @@
   - git checkout <ローカルブランチ>: ローカルブランチの切替
 - git branch -vv: ブランチの詳細表示
   - フォーマット: <ローカルブランチ> [リモートブランチ] 最新コミットメッセージ
-- git branch --set-up-stream-to=<リモート/リモートブランチ> <ローカルブランチ>: リモートブランチをローカルブランチに設定
+- git branch --set-upstream-to=<リモート/リモートブランチ> <ローカルブランチ>: リモートブランチをローカルブランチに設定
 - git branch -d <ローカルブランチ>: ローカルブランチの削除
-- git pull <リモート> <ブランチ>: リモートのブランチの変更をローカルのブランチに取得
+- git pull: リモートのブランチの変更をローカルのブランチに取得
+  - git pull <リモート> <ブランチ
 - git add <ファイル>: 変更をステージング(差分確認(git status, git diff))
   - git add -A: 全ての変更をステージング
 - git commit -m"<コミットメッセージ>": ステージングされた変更をローカルにコミット(コミット履歴確認(git log))
-- git push <リモート> <ブランチ>: コミットされた変更をリモートにプッシュ, [参考URL](https://qiita.com/shin4488/items/0bc36878eab39d5e499d)
+- git push: コミットされた変更をリモートにプッシュ, [参考URL](https://qiita.com/shin4488/items/0bc36878eab39d5e499d)
+  - git push <リモート> <ブランチ>
 
 ## Docker Desktop
 - TODO

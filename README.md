@@ -68,10 +68,10 @@
 - git branch --set-up-stream-to=<リモート/リモートブランチ> <ローカルブランチ>: リモートブランチをローカルブランチに設定
 - git branch -d <ローカルブランチ>: ローカルブランチの削除
 - git pull <リモート> <ブランチ>: リモートのブランチの変更をローカルのブランチに取得
-- git add <ファイル>: 変更をステージング(差分確認してから(git status, git diff))
+- git add <ファイル>: 変更をステージング(差分確認(git status, git diff))
   - git add -A: 全ての変更をステージング
-- git commit -m"<コミットメッセージ>": ステージングされた変更をローカルにコミット
-- git push <リモート> <ブランチ>: コミットされた変更をリモートにプッシュ
+- git commit -m"<コミットメッセージ>": ステージングされた変更をローカルにコミット(コミット履歴確認(git log))
+- git push <リモート> <ブランチ>: コミットされた変更をリモートにプッシュ, [参考URL](https://qiita.com/shin4488/items/0bc36878eab39d5e499d)
 
 ## Docker Desktop
 - TODO

@@ -80,6 +80,7 @@
 - git commit -m"<コミットメッセージ>": ステージングされた変更をローカルにコミット(コミット履歴確認(git log))
 - git push: コミットされた変更をリモートにプッシュ, [参考URL](https://qiita.com/shin4488/items/0bc36878eab39d5e499d)
   - git push <リモート> <ブランチ>: デフォルトだとリモートがorigin, ブランチが現在のブランチ
+  - git push --delete <リモート> <ブランチ>: リモートのブランチを削除, [参考URL](https://qiita.com/yuu_ta/items/519ea47ac2c1ded032d9)
 
 ## Docker Desktop
 - TODO

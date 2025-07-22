@@ -1,0 +1,5 @@
+@startuml shop(demo-service)
+
+CUSTOMERS ||--o{ SALES
+
+@enduml

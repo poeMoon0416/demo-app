@@ -40,12 +40,34 @@ public class DemoController {
 
     @GetMapping("/customers")
     public List<Customer> listCustomers() {
-        return customerRepository.findAll();
+        List<Customer> customers = customerRepository.findAll();
+        return customers.stream()
+                .map(customer -> Customer.builder()
+                        .id(customer.getId())
+                        .name(customer.getName())
+                        // .name(null)
+                        .sales(customer.getSales()
+                                .stream()
+                                .map(sale -> Sale.builder()
+                                        .id(sale.getId())
+                                        .price(sale.getPrice())
+                                        .build())
+                                .toList())
+                        .build())
+                .toList();
     }
 
     @GetMapping("/sales")
     public Sale findSales(@RequestParam("id") int id) {
-        return saleRepository.findById(id);
+        Sale sale = saleRepository.findById(id);
+        return Sale.builder()
+                .id(sale.getId())
+                .price(sale.getPrice())
+                .customer(Customer.builder()
+                        .id(sale.getCustomer().getId())
+                        .name(sale.getCustomer().getName())
+                        .build())
+                .build();
     }
 
 }

@@ -2,6 +2,9 @@ package com.example.demo_service;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -31,7 +34,8 @@ public class Customer {
     @Column(name = "NAME", nullable = false, length = 255)
     private String name;
 
-    @OneToMany(mappedBy = "customers")
+    @OneToMany(mappedBy = "customer")
     @Column(nullable = true)
+    @JsonInclude(Include.NON_NULL)
     private List<Sale> sales;
 }

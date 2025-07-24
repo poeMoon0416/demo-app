@@ -5,15 +5,15 @@
 - vsc_workspaceを開く
 - demo-app: リポジトリ
 - .vscode: VSCodeの設定
-- apis/xxx-service: 各サービスのSpringBootプロジェクト, マイクロサービスアーキテクチャ(サービスごとに@SpringBootApplicationがある感じ)
+- demo-back/xxx-service: 各サービスのSpringBootプロジェクト, マイクロサービスアーキテクチャ(サービスごとに@SpringBootApplicationがある感じ)
 - jar/xxx: 解凍したJarファイルの置き場所, ex) Gradleのjar: C:\Users\81802\.gradle\caches\modules-2, [参考URL](https://qiita.com/opengl-8080/items/4c1aa85b4737bd362d9e)
 - sql: demo-db.mv.dbがDB本体, その他SQLファイル(.sql)
-- ui-vue3: Vuetifyプロジェクト、ビルド(コンパイル等)後の静的な状態をデプロイすればSSGできそう？
+- demo-front: Vuetifyプロジェクト、ビルド(コンパイル等)後の静的な状態をデプロイすればSSGできそう？
 
 ## 起動手順
 - sql: MySQL Serverをコマンドプロンプトで起動, タスクマネージャで確認
-- apis/xxx-service: VSCode上でXxxApplication.javaをRunで実行
-- ui-vue3: npm run devコマンドで実行
+- demo-back/xxx-service: VSCode上でXxxApplication.javaをRunで実行
+- demo-front: npm run devコマンドで実行
 
 ## H2/MySQL
 ### H2
@@ -48,6 +48,7 @@
 - tsconfig.app.jsonを書き換え("extends": "@vue/tsconfig/tsconfig.json")
 - cd Vuetifyプロジェクトのディレクトリ
 - npm run dev
+- ESLintとPrettierが競合したのでeslint.config.jsの書き換え, [参考URL](https://prettier.io/docs/integrating-with-linters.html)
 
 ## GitHub
 ### 設定

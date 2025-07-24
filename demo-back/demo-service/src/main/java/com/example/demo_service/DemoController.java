@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
+@CrossOrigin(origins = "http://localhost:3000")
 public class DemoController {
 
     @Autowired
@@ -22,7 +23,6 @@ public class DemoController {
     @Autowired
     SaleRepository saleRepository;
 
-    @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping("/")
     public List<DemoDto> findAll() {
         // DemoDto dd = new DemoDto(3, "abc");

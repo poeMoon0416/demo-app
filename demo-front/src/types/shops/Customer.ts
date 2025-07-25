@@ -5,3 +5,6 @@ export interface Customer {
   name: string;
   sales: Sale[];
 }
+
+// interfaceだとエラー, PickとOmitはtypeでないと受け取れない
+export type CustomerSelection = Pick<Customer, "name" | "id">;

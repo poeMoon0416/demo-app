@@ -21,6 +21,7 @@ import lombok.NoArgsConstructor;
  */
 @Entity
 @Table(name = "SALES")
+// https://qiita.com/opengl-8080/items/671ffd4bf84fe5e32557
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

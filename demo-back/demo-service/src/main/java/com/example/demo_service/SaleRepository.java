@@ -5,5 +5,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface SaleRepository extends JpaRepository<Sale, Integer> {
-    public Sale findById(int id);
+    // デフォルトのOptional<Sale>でないと存在しないときnullでバグる
+    // public Sale findById(int id);
 }

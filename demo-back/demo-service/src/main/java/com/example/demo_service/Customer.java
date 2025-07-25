@@ -31,6 +31,8 @@ public class Customer {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Integer id;
 
+    // Column(nullable = false)でもエンティティのフィールドはnullになりうる
+    // (DB側の列がNOT NULLであるという意味)
     @Column(name = "NAME", nullable = false, length = 255)
     private String name;
 

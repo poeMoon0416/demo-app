@@ -1,5 +1,5 @@
 import type { CustomerSelection, Customer } from "@/types/shops/Customer";
-import type { Sale } from "@/types/shops/Sale";
+import type { Sale, SaleView } from "@/types/shops/Sale";
 import { defineStore } from "pinia";
 
 // https://pinia.vuejs.org/introduction.html
@@ -11,13 +11,19 @@ export const useShopsStore = defineStore("shops", () => {
   const customerSelections = ref<CustomerSelection[]>([]);
 
   const sale = ref<Sale>({
-    id: 0,
-    price: 0,
+    id: -1,
+    price: -1,
     customer: {
-      id: 0,
+      id: -1,
       name: "",
       sales: [],
     },
+  });
+
+  const saleView = ref<SaleView>({
+    id: -1,
+    price: -1,
+    customerName: "",
   });
 
   // actions
@@ -46,13 +52,29 @@ export const useShopsStore = defineStore("shops", () => {
       .then((obj) => (sale.value = obj));
   };
 
+  const findSaleView = async (id: number) => {
+    fetch(`http://localhost:8080/sales-view/${id}`)
+      .then((res) => res.json())
+      .then((obj: { 売上情報ID: number; 売上高: number; 顧客名: string }) => {
+        // JSONとTypeScriptのDTOのプロパティ名が異なっている場合でもマップ可能
+        const { 売上情報ID, 売上高, 顧客名 } = obj;
+        saleView.value = {
+          id: 売上情報ID,
+          price: 売上高,
+          customerName: 顧客名,
+        };
+      });
+  };
+
   // return
   return {
     customers,
     customerSelections,
     sale,
+    saleView,
     listCustomers,
     findCustomer,
     findSales,
+    findSaleView,
   };
 });

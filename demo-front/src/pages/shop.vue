@@ -35,16 +35,25 @@
       {{ sale }}
     </code>
   </pre>
+
+  <p>SaleView</p>
+  <v-number-input v-model="saleViewId" label="SaleView Id:" />
+  <v-btn @click="findSaleView">検索</v-btn>
+  <pre>
+    <code>
+      {{ saleView }}
+    </code>
+  </pre>
 </template>
 
 <script setup lang="ts">
 // imports and useStore()
 import { useShopsStore } from "@/stores/shops";
-import type { Sale } from "@/types/shops/Sale";
+import type { SaleView, Sale } from "@/types/shops/Sale";
 import type { CustomerSelection } from "@/types/shops/Customer";
 const store = useShopsStore();
 
-// customers
+// Customersの状態やイベントハンドラ
 store.listCustomers();
 
 const currentCustomerSelection = ref<CustomerSelection>({
@@ -56,7 +65,7 @@ async function findCustomer() {
   store.findCustomer(currentCustomerSelection.value.id);
 }
 
-// sales
+// Sales
 // https://ja.vuejs.org/guide/essentials/reactivity-fundamentals.html
 const salesId = ref<number>(-1);
 
@@ -66,4 +75,13 @@ const findSales = async () => {
 
 // https://ja.vuejs.org/guide/essentials/computed.html
 const sale = computed<Sale>(() => store.sale);
+
+// SaleView
+const saleViewId = ref<number>(-1);
+
+const findSaleView = async () => {
+  store.findSaleView(saleViewId.value);
+};
+
+const saleView = computed<SaleView>(() => store.saleView);
 </script>

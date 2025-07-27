@@ -9,16 +9,27 @@ import com.example.demo_service.shop.Sale;
 import com.example.demo_service.shop.SaleService;
 import com.example.demo_service.shop.SaleView;
 
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.net.URI;
 // import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+// import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+// import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.PutMapping;
 
-// SpringBoot3プログラミング入門等
+// 参考: SpringBoot3プログラミング入門等
 @RestController
 @CrossOrigin(origins = "http://localhost:3000")
 public class DemoController {
@@ -87,6 +98,77 @@ public class DemoController {
                                                                 .build())
                                                 .toList())
                                 .build();
+        }
+
+        // ステータスコード参考: https://developer.mozilla.org/ja/docs/Web/HTTP/Reference/Status
+        // curl -v http://localhost:8080/customers
+        // 上記でリーズンフレーズが表示されないと悩んでいたのだが仕様ならしい。
+        // 参考URL: https://qiita.com/5at00001040/items/413e1bdb07bbba2cf890,
+        // 参考URL: https://gihyo.jp/admin/serial/01/http3/0001
+        // Content-Type: application/json
+        // {"id": null, "name": "CRUDテスト"}
+        // 上記のようにダブルクォートでJSONのプロパティを囲わないとエラーが出るので注意。
+        @PostMapping("/create-customer")
+        public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer, HttpServletResponse res)
+                        throws IOException {
+                // 存在する場合は400 Bad Request
+                // https://spring.pleiades.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/JpaRepository.html
+                // https://spring.pleiades.io/spring-data/commons/docs/current/api/org/springframework/data/repository/CrudRepository.html
+                if (customerService.existsById(customer.getId())) {
+                        // https://spring.io/projects/spring-framework
+                        // https://docs.spring.io/spring-framework/reference/web.html
+                        // https://docs.spring.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/responseentity.html
+                        return ResponseEntity.badRequest().body(null);
+                        // res.sendError(HttpStatus.BAD_REQUEST.value(),
+                        // HttpStatus.BAD_REQUEST.getReasonPhrase());
+                        // return null;
+                }
+                // IDを格納したエンティティを返す
+                // ～デシリアライズ, JSONプロパティの不足～
+                // デシリアライズ時にクラスに存在する属性がJSONに存在しない場合はデフォルト値が設定される
+                // オブジェクトならnull, プリミティブだとintなら0といった対応するデフォルト値
+                // ～デシリアライズ, JSONプロパティの過多～
+                // @RequestBodyで余計なプロパティが無視されているのだろう
+                System.out.println("req: " + customer);
+                Customer ret = customerService.createCustomer(customer);
+                // JpaRepositoryのsaveAndFlushはIDを設定したエンティティを返す
+                System.out.println("res: " + ret);
+                // 201 Created
+                return ResponseEntity.created(URI.create("http://localhost:3000/shop")).body(ret);
+        }
+
+        // TODO: @ModelAttribute
+        // Content-Type: application/x-www-form-urlencoded
+        // name=CRUD更新テスト&sales=
+
+        // Content-Type: application/json
+        // {"id": 20, "name": "CRUD更新テスト"}
+        // 上記のようにダブルクォートでJSONのプロパティを囲わないとエラーが出るので注意。
+        @PutMapping("/update-customer/{id}")
+        public ResponseEntity<Customer> updateCustomer(@PathVariable(name = "id") int id,
+                        @RequestBody Customer customer) {
+                System.out.println("req: " + customer);
+                // 存在しないなら404 Not Found
+                if (!customerService.existsById(id)) {
+                        return ResponseEntity.notFound().build();
+                }
+                // 更新後のエンティティを返す(200 OK)
+                Customer ret = customerService.updateCustomer(customer);
+                System.out.println("res: " + ret);
+                return ResponseEntity.ok().body(ret);
+        }
+
+        // @PathVariableもnameなしだとName for argument of type [xxx]とエラーが出る
+        @DeleteMapping("/delete-customer/{id}")
+        public ResponseEntity<Customer> deleteCustomer(@PathVariable(name = "id") int id) {
+                // 存在しない場合は404 Not Found
+                if (!customerService.existsById(id)) {
+                        return ResponseEntity.notFound().build();
+                }
+                // 基本的にDELETEメソッドのレスポンスはボディを持たないようだ
+                customerService.deleteCustomer(id);
+                // 204 No Content
+                return ResponseEntity.noContent().build();
         }
 
         @GetMapping("/sales")

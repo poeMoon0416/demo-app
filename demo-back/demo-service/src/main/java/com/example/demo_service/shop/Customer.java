@@ -2,6 +2,7 @@ package com.example.demo_service.shop;
 
 import java.util.List;
 
+// import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -26,9 +27,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+// デシリアライズ,
+// JSONプロパティの過多の場合に下記の指定をしてもエラーが出ないので@RequestBodyでignoreUnkown=trueのようなことをしているのだろう
+// @JsonIgnoreProperties(ignoreUnknown = false)
 public class Customer {
+    // https://spring.pleiades.io/specifications/platform/8/apidocs/javax/persistence/generationtype
+    // IDENTITY: AUTO_INCREMENT, IDの列のようだ
+    // SEQUENCE: <table>_seq, シーケンスのオブジェクトのようだ
+    // TABLE: hibernate_sequences, シーケンス用のテーブルのようだ
+    // AUTO: エラーメッセージ的にSEQUENCEのようだ(MySQL)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    // private int id;
     private Integer id;
 
     // Column(nullable = false)でもエンティティのフィールドはnullになりうる

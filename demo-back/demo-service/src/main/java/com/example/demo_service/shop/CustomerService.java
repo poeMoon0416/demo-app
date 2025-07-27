@@ -23,4 +23,21 @@ public class CustomerService {
                         .sales(List.of())
                         .build());
     }
+
+    public Customer createCustomer(Customer customer) {
+        // NOT NULLなのにnullを保存しようとするとエラー
+        return customerRepository.saveAndFlush(customer);
+    }
+
+    public Customer updateCustomer(Customer customer) {
+        return customerRepository.saveAndFlush(customer);
+    }
+
+    public void deleteCustomer(int id) {
+        customerRepository.deleteById(id);
+    }
+
+    public boolean existsById(Integer id) {
+        return customerRepository.existsById(id == null ? -1 : id);
+    }
 }

@@ -1,7 +1,9 @@
 # demo-app 自分用メモ
+
 - Ctrl+Shift+Vでプレビュー(VSCode)
 
 ## ディレクトリ構成
+
 - vsc_workspaceを開く
 - demo-app: リポジトリ
 - .vscode: VSCodeの設定
@@ -11,19 +13,24 @@
 - demo-front: Vuetifyプロジェクト、ビルド(コンパイル等)後の静的な状態をデプロイすればSSGできそう？
 
 ## 起動手順
+
 - sql: MySQL Serverをコマンドプロンプトで起動, タスクマネージャで確認
 - demo-back/xxx-service: VSCode上でXxxApplication.javaをRunで実行
 - demo-front: npm run devコマンドで実行
 
 ## H2/MySQL
+
 ### H2
+
 - H2はSpringInitializrの依存関係でインストールできるのでok(H2個別でインストールと異なりコンソールが使えない...)
 - H2コンソールを使うためにサーバーモードでH2に接続する(ファイルモードでもコネクション1つだけどできる) [参考URL](https://it-jog.com/java/springdatajpa/h2savefile)
 - DBには3つのモードがあるようだ
   - インメモリモード: 指定なしまたはmem:のJDBC URL, アプリ停止でデータ消滅, ファイルが存在しないのでコンソールからは操作できない
   - ファイルモード: FILE:のJDBC URL, DBファイルにデータ書込, コンソールから操作できるが1つしかコネクションをはれないのでアプリとコンソールを切り替えながらやる感じになる
   - サーバーモード: TCP:のJDBC URL, DBファイルにデータ書込, 複数のコネクションをはれるのだがSpring BootとH2の組合せでは非対応？(これやるならMySQLをインストールして使う必要ありそう)
+
 ### MySQL
+
 - たまに動かなくなるのでパソコンごと再起動(タスクマネージャで再起動してもダメ)
 - [MySQLダウンロード](https://dev.mysql.com/downloads/mysql/): ここからダウンロードした(MySQL Community Server)
 - MySQLツール
@@ -36,29 +43,37 @@
 - 起動: mysqld, ログイン: mysql -u <ユーザー> -p <パスワード>, 停止: mysqladmin -u root -p shutdown, [参考URL](https://www.javadrive.jp/mysql/install/index10.html)
 
 ## SpringBoot
-- https://spring.io/quickstart
+
+- <https://spring.io/quickstart>
 - JDKは別でインストール(Oracle JDK LTS21)
 - VSCodeのアドオン入れる(内部的にSpringInitializr使っているようなので同じ)
 - Ctrl+Shift+PでSpringBootプロジェクト作成
 
 ## Vuetify
+
 - Node.jsをインストール(Node v22.17.0)
 - Vuetifyプロジェクト作成(Vue自体も入った状態なのでok)
 - npm create vuetify@latest
-- tsconfig.app.jsonを書き換え("extends": "@vue/tsconfig/tsconfig.json")
 - cd Vuetifyプロジェクトのディレクトリ
 - npm run dev
-- ESLintとPrettierが競合したのでeslint.config.jsの書き換え, [参考URL](https://prettier.io/docs/integrating-with-linters.html)
+- tsconfig.app.jsonを書き換え("extends": "@vue/tsconfig/tsconfig.json") => 不要かも
+- プロジェクトの.gitignoreにimgを無視する設定を記述
+- ESLintとPrettierが競合したのでnpm installとeslint.config.jsの書き換え, [参考URL](https://prettier.io/docs/integrating-with-linters.html)
+- プロジェクト作成後突然起動しなくなった場合は再作成(Viteの設定ファイル等が存在しなかったので中途半端な状態で作成された？, 1回依存関係のエラーが出ていた気がする)
 
 ## GitHub
+
 ### 設定
+
 - Git Bashを使う(現在のブランチを表示してくれる)
 - Settings > Password and authentication > Authenticator app, Google AuthenticatorをスマホでダウンロードしてアカウントのMFAを設定
 - Settings > Developer Settings > Personal access tokens(classic), repo権限のトークンを作成(プライベートリポジトリのアクセスに必要)
 - [ユーザー名とメルアドの設定, リポジトリのクローン](https://docs.github.com/ja/get-started/git-basics/set-up-git), clone・pull・pushでダイアログ出るがブラウザログインで認証できる
 - .git: GitHubの設定(リモートoriginとブランチmain等), クローンすると取得できる
 - .gitignore: Git側で無視するファイルの設定, [参考URL](https://qiita.com/anqooqie/items/110957797b3d5280c44f)
+
 ### 操作
+
 - みえているファイルは現在のブランチの状態
 - チケットごとにブランチを切って開発
 - マージの手順
@@ -84,7 +99,9 @@
   - git push --delete <リモート> <ブランチ>: リモートのブランチを削除, [参考URL](https://qiita.com/yuu_ta/items/519ea47ac2c1ded032d9)
 
 ## Docker Desktop
+
 - TODO
 
 ## AWS
+
 - TODO

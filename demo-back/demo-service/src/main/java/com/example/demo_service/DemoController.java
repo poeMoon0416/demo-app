@@ -2,6 +2,13 @@ package com.example.demo_service;
 
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.demo_service.shop.Customer;
+import com.example.demo_service.shop.CustomerService;
+import com.example.demo_service.shop.DemoRepository;
+import com.example.demo_service.shop.Sale;
+import com.example.demo_service.shop.SaleService;
+import com.example.demo_service.shop.SaleView;
+
 // import java.util.ArrayList;
 import java.util.List;
 

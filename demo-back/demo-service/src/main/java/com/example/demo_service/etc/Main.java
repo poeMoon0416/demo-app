@@ -40,5 +40,10 @@ public class Main {
         System.out.println(
                 String.format("id: %d, price: %d, customer: %s",
                         sale1.getId(), sale1.getPrice(), sale1.getCustomer()));
+
+        // フォームの配列いっぱいテスト用
+        // for (int i = 0; i < 10000; i++) {
+        // System.out.printf("sales[%d]=&", i);
+        // }
     }
 }

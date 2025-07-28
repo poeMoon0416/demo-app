@@ -22,6 +22,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 // import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -105,9 +106,12 @@ public class DemoController {
         // 上記でリーズンフレーズが表示されないと悩んでいたのだが仕様ならしい。
         // 参考URL: https://qiita.com/5at00001040/items/413e1bdb07bbba2cf890,
         // 参考URL: https://gihyo.jp/admin/serial/01/http3/0001
+        // ---
         // Content-Type: application/json
         // {"id": null, "name": "CRUDテスト"}
         // 上記のようにダブルクォートでJSONのプロパティを囲わないとエラーが出るので注意。
+        // @RequestBodyにURLエンコードしたものを渡すとデコードされないので注意。(フォームは@ModelAttribute)
+        // @RequestBody: JSONに対応している
         @PostMapping("/create-customer")
         public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer, HttpServletResponse res)
                         throws IOException {
@@ -137,19 +141,29 @@ public class DemoController {
                 return ResponseEntity.created(URI.create("http://localhost:3000/shop")).body(ret);
         }
 
-        // TODO: @ModelAttribute
         // Content-Type: application/x-www-form-urlencoded
-        // name=CRUD更新テスト&sales=
-
-        // Content-Type: application/json
-        // {"id": 20, "name": "CRUD更新テスト"}
-        // 上記のようにダブルクォートでJSONのプロパティを囲わないとエラーが出るので注意。
+        // name=CRUD%20%E6%9B%B4%E6%96%B0%E3%83%86%E3%82%B9%E3%83%88&sales=
+        // nameはJSのencodeURI("CRUD 更新テスト");
+        // https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Global_Objects/encodeURI
+        // prop=と指定があれば空の配列等, 指定がなければnull
+        // sales=&name=CRUD%20%E6%9B%B4%E6%96%B0%E3%83%86%E3%82%B9%E3%83%88&id=3
+        // @ModelAttributeはslugにも対応している
+        // ただし、フォームのデータの方が優先される
+        // @MethodMappingにslugが存在する場合はないとエラーになる
+        // 意図的にreturnしたNot Found等はボディを返さないが、Spring側のものはボディにタイムスタンプ等が含まれる
+        // ---
+        // http://localhost:8080/update-customer/3?name=テスト3&販売
+        // name=テスト4&販売=
+        // コンマ区切りで結合される
+        // @ModelAttribute: クエリストリングとフォームとslugに対応している
+        // ---
         @PutMapping("/update-customer/{id}")
-        public ResponseEntity<Customer> updateCustomer(@PathVariable(name = "id") int id,
-                        @RequestBody Customer customer) {
+        public ResponseEntity<Customer> updateCustomer(
+                        // @RequestParam(name="customer") Customer customer
+                        @ModelAttribute Customer customer) {
                 System.out.println("req: " + customer);
                 // 存在しないなら404 Not Found
-                if (!customerService.existsById(id)) {
+                if (!customerService.existsById(customer.getId())) {
                         return ResponseEntity.notFound().build();
                 }
                 // 更新後のエンティティを返す(200 OK)
@@ -157,6 +171,22 @@ public class DemoController {
                 System.out.println("res: " + ret);
                 return ResponseEntity.ok().body(ret);
         }
+
+        // @RequestParam: クエリストリングとフォームに対応している
+        // @PathVariable: slugに対応している
+        // ---
+        // @PutMapping("update-customer/{id}")
+        // public Customer updateCustomer(@PathVariable(name = "id") int id,
+        // @RequestParam(name = "name") String name,
+        // @RequestParam(name = "販売") List<Sale> sales) {
+        // System.out.println(String.format("req: {id: %d, name: %s, 販売: %s}", id, name,
+        // sales));
+        // Customer customer =
+        // Customer.builder().id(id).name(name).sales(sales).build();
+        // customerService.updateCustomer(customer);
+        // System.out.println("res" + customer);
+        // return customer;
+        // }
 
         // @PathVariableもnameなしだとName for argument of type [xxx]とエラーが出る
         @DeleteMapping("/delete-customer/{id}")

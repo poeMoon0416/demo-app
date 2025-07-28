@@ -1,0 +1,25 @@
+<!-- ブラウザで開く -->
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>formの配列の表現のテスト</title>
+  </head>
+  <body>
+    <!-- 配列表現: https://job-info.hateblo.jp/entry/2024/08/19/234129 -->
+    <!-- https://kanda-it-school-kensyu.com/php-basic-contents/pb_ch06/pb_0601/ -->
+    <!-- ファイルの送信: https://developer.mozilla.org/ja/docs/Learn_web_development/Extensions/Forms/Sending_and_retrieving_form_data#%E7%89%B9%E5%88%A5%E3%81%AA%E5%A0%B4%E5%90%88_%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E9%80%81%E4%BF%A1 -->
+    <!-- これは無理: name=テスト更新&sales[0]={id=&price=&customer=}&sales[1]=&sales[2]= -->
+    <!-- これはok: name=テスト更新&sales[0]=&sales[1]=&sales[2]= -->
+    <!-- 上記の配列を10000要素にしたら500エラーになった, 255要素までは通るっぽい -->
+    <form action="." method="post">
+      <input type="checkbox" name="test[0]" value="1" id="input" />
+      <input type="checkbox" name="test[1]" value="2" />
+      <input type="checkbox" name="test[2]" value="3" />
+      <input type="submit" value="テスト" />
+    </form>
+  </body>
+</html>
+<script>
+  const input = document.getElementById("input");
+  input.setAttribute("value", "");
+</script>

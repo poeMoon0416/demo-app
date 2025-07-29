@@ -40,4 +40,16 @@ public class CustomerService {
     public boolean existsById(Integer id) {
         return customerRepository.existsById(id == null ? -1 : id);
     }
+
+    public List<Customer> findByName(String name) {
+        // 自動であいまい検索にはならないので注意
+        if (!name.startsWith("%")) {
+            name = "%" + name;
+        }
+        if (!name.endsWith("%")) {
+            name = name + "%";
+        }
+        System.out.println("findByName's name: " + name);
+        return customerRepository.findByNameLikeOrderByNameDesc(name);
+    }
 }

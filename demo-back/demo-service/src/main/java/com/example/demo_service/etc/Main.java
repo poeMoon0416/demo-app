@@ -45,5 +45,14 @@ public class Main {
         // for (int i = 0; i < 10000; i++) {
         // System.out.printf("sales[%d]=&", i);
         // }
+
+        // String str = """
+        //                         use demo;
+        //         desc customers;
+        //         select * from customers;
+        //         select * from sales;
+        //         select * from customers where name like '%テスト%';
+        //                         """;
+        // System.out.println(str.toUpperCase());
     }
 }

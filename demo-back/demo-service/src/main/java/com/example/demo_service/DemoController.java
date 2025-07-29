@@ -19,6 +19,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 // import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -113,7 +114,8 @@ public class DemoController {
         // @RequestBodyにURLエンコードしたものを渡すとデコードされないので注意。(フォームは@ModelAttribute)
         // @RequestBody: JSONに対応している
         @PostMapping("/create-customer")
-        public ResponseEntity<Customer> createCustomer(@RequestBody Customer customer, HttpServletResponse res)
+        public ResponseEntity<Customer> createCustomer(@RequestBody @Validated Customer customer,
+                        HttpServletResponse res)
                         throws IOException {
                 // 存在する場合は400 Bad Request
                 // https://spring.pleiades.io/spring-data/jpa/docs/current/api/org/springframework/data/jpa/repository/JpaRepository.html
@@ -199,6 +201,12 @@ public class DemoController {
                 customerService.deleteCustomer(id);
                 // 204 No Content
                 return ResponseEntity.noContent().build();
+        }
+
+        // クエリストリングはブラウザ, フォームはform要素でURLエンコードされていそう
+        @GetMapping("/customer-by-name")
+        public List<Customer> getMethodName(@RequestParam(name = "name") String name) {
+                return customerService.findByName(name);
         }
 
         @GetMapping("/sales")

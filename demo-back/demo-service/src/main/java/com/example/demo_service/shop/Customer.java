@@ -13,6 +13,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -44,6 +46,8 @@ public class Customer {
     // Column(nullable = false)でもエンティティのフィールドはnullになりうる
     // (DB側の列がNOT NULLであるという意味)
     @Column(name = "NAME", nullable = false, length = 255)
+    @NotBlank
+    @Size(min = 1, max = 20)
     private String name;
 
     @OneToMany(mappedBy = "customer")

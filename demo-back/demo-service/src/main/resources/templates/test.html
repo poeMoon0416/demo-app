@@ -2,7 +2,7 @@
 <html lang="ja">
   <head>
     <meta charset="utf-8" />
-    <title>formの配列の表現のテスト</title>
+    <title>formの配列の表現とファイル送信のテスト</title>
   </head>
   <body>
     <!-- 配列表現: https://job-info.hateblo.jp/entry/2024/08/19/234129 -->
@@ -11,11 +11,23 @@
     <!-- これは無理: name=テスト更新&sales[0]={id=&price=&customer=}&sales[1]=&sales[2]= -->
     <!-- これはok: name=テスト更新&sales[0]=&sales[1]=&sales[2]= -->
     <!-- 上記の配列を10000要素にしたら500エラーになった, 255要素までは通るっぽい -->
-    <form action="." method="post">
+    <div th:if="${msg != null && testFilePath != null}">
+      <p th:text="${msg}"></p>
+      <!-- <img th:src="@{/test-file.JPG}"> -->
+      <img th:src="@{${testFilePath}}" />
+    </div>
+    <!-- コンテキストパスからの相対パス -->
+    <form action="./test" method="post">
       <input type="checkbox" name="test[0]" value="1" id="input" />
       <input type="checkbox" name="test[1]" value="2" />
       <input type="checkbox" name="test[2]" value="3" />
       <input type="submit" value="テスト" />
+    </form>
+    <!-- action="."は通らないがaction="#"は通る -->
+    <!-- MultiPartForm, https://developer.mozilla.org/ja/docs/Learn_web_development/Extensions/Forms/Sending_and_retrieving_form_data#%E7%89%B9%E5%88%A5%E3%81%AA%E5%A0%B4%E5%90%88_%E3%83%95%E3%82%A1%E3%82%A4%E3%83%AB%E9%80%81%E4%BF%A1 -->
+    <form th:action="@{/test}" method="post" enctype="multipart/form-data">
+      <input type="file" name="test-file" />
+      <input type="submit" value="ファイル送信" />
     </form>
   </body>
 </html>

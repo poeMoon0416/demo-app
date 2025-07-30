@@ -1,6 +1,8 @@
 package com.example.demo_service;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.example.demo_service.shop.Customer;
 import com.example.demo_service.shop.CustomerService;
@@ -13,6 +15,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.file.Paths;
 // import java.util.ArrayList;
 import java.util.List;
 
@@ -230,6 +234,38 @@ public class DemoController {
                                 .price(sale.getPrice())
                                 .customerName(sale.getCustomer().getName())
                                 .build();
+        }
+
+        @GetMapping("/test")
+        public ModelAndView testGet(ModelAndView mav,
+                        @RequestParam(value = "testFilePath", required = false) String testFilePath) {
+                System.out.println(testFilePath);
+                mav.setViewName("test");
+                mav.addObject("msg", "ファイルをアップロード");
+                mav.addObject("testFilePath", testFilePath);
+                return mav;
+        }
+
+        // https://spring.pleiades.io/spring-framework/docs/current/javadoc-api/org/springframework/web/multipart/MultipartFile.html
+        @PostMapping("/test")
+        public ModelAndView testPost(@RequestParam("test-file") MultipartFile testFile, ModelAndView mav)
+                        throws IOException, InterruptedException {
+                // String msg = "テストファイル送信成功";
+                String fileName = testFile.getOriginalFilename();
+                System.out.println(fileName);
+                // String suffix = fileName == null ? "" :
+                // fileName.substring(fileName.lastIndexOf("."));
+                // SpringBootプロジェクトルートからの相対パスになる(このファイルからだとdemo-service)
+                // https://docs.oracle.com/javase/jp/8/docs/api/java/nio/file/Paths.html
+                testFile.transferTo(
+                                // Paths.get("src/main/resources/static/test-file" + suffix)
+                                Paths.get("src/main/resources/static/" + fileName));
+                System.out.println(testFile);
+                // return testGet(mav, fileName);
+                mav.setViewName("redirect:/test?testFilePath=" + URLEncoder.encode(fileName, "utf-8"));
+                // ちょっと待たないとファイルの保存がサーバに反映されない
+                Thread.sleep(3000);
+                return mav;
         }
 
 }

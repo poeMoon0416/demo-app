@@ -11,6 +11,7 @@ import com.example.demo_service.shop.Sale;
 import com.example.demo_service.shop.SaleService;
 import com.example.demo_service.shop.SaleView;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatusCode;
 // import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -33,6 +35,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.PutMapping;
 
 // 参考: SpringBoot3プログラミング入門等
@@ -268,4 +271,15 @@ public class DemoController {
                 return mav;
         }
 
+        // curl http://localhost:8080/test-path/test-view -v -u guest:qwerty
+        // ブラウザのDevツールはリーズンフレーズなくても補って表示している
+        @GetMapping(path = "/test-path/test-view")
+        public ModelAndView testView(@RequestParam(name = "msg", required = false) String msg,
+                        // https://spring.pleiades.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/requestheader.html
+                        @RequestHeader("Accept-Language") String acceptLanguage) {
+                // @RestControllerだと文字列がそのまま返る
+                // return "test-dir/test-view"
+                // ServletResponseのsetHeader()がうまく動かない
+                return new ModelAndView("test-dir/test", HttpStatusCode.valueOf(222));
+        }
 }

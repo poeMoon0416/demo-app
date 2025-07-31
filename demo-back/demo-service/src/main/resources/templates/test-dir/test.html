@@ -1,0 +1,16 @@
+<!-- https://www.thymeleaf.org/doc/tutorials/3.1/usingthymeleaf.html -->
+<!-- <html th:lang="ja"> -->
+<html th:lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link th:href="@{/test-dir/test-view.css}" rel="stylesheet" />
+    <title>ビューのテスト</title>
+  </head>
+  <body>
+    <h1>ビューのテスト</h1>
+    <p th:text="${msg}" id="msg"></p>
+    <p th:text="#{sample.msg}"></p>
+    <p th:text="#{msg2}"></p>
+    <p th:text="#{pkg_msg}"></p>
+  </body>
+</html>

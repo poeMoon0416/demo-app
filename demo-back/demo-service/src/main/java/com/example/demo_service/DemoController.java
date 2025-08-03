@@ -11,7 +11,7 @@ import com.example.demo_service.shop.Sale;
 import com.example.demo_service.shop.SaleService;
 import com.example.demo_service.shop.SaleView;
 
-import jakarta.servlet.http.HttpServletRequest;
+// import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
@@ -276,10 +276,15 @@ public class DemoController {
         @GetMapping(path = "/test-path/test-view")
         public ModelAndView testView(@RequestParam(name = "msg", required = false) String msg,
                         // https://spring.pleiades.io/spring-framework/reference/web/webmvc/mvc-controller/ann-methods/requestheader.html
-                        @RequestHeader("Accept-Language") String acceptLanguage) {
+                        @RequestHeader("Accept-Language") String acceptLanguage,
+                        @RequestParam(name = "num", required = false) int num) throws Exception {
                 // @RestControllerだと文字列がそのまま返る
                 // return "test-dir/test-view"
                 // ServletResponseのsetHeader()がうまく動かない
-                return new ModelAndView("test-dir/test", HttpStatusCode.valueOf(222));
+                ModelAndView mav = new ModelAndView("test-dir/test", HttpStatusCode.valueOf(222));
+                mav.addObject("isEven", num % 2 == 0);
+                mav.addObject("arr", List.of(1, 2, 3, 99));
+                mav.addObject("format", String.class.getMethod("format", String.class, Object[].class));
+                return mav;
         }
 }

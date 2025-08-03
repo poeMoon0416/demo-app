@@ -12,5 +12,43 @@
     <p th:text="#{sample.msg}"></p>
     <p th:text="#{msg2}"></p>
     <p th:text="#{pkg_msg}"></p>
+    <div th:if="${isEven}" style="background-color: red">
+      <p th:text="${isEven}"></p>
+      <p>偶数</p>
+    </div>
+    <!-- is-evenだとエラー(Javaの変数名としてダメだからだろう, 引き算になる) -->
+    <div th:unless="${isEven}" style="background-color: blue">
+      <!-- ${}の外側をシングルクォートにしてもok -->
+      <!-- ユーティリティオブジェクト, String.formatはないようだ: https://www.thymeleaf.org/doc/tutorials/2.1/usingthymeleaf_ja.html#%E6%96%87%E5%AD%97%E5%88%97 -->
+      <!-- なるべくテンプレート外で処理する -->
+      <p th:text='${#strings.length("abc") + "isEven: " + isEven}'></p>
+      <!-- 下記のように書いても動かない -->
+      <!-- <p th:text='${String.format("isEven: %b", isEven)}'></p> -->
+      <!-- <p th:text='${format.invoke("isEven: %b", "isEven: %b", isEven)}'></p> -->
+      <p>奇数</p>
+    </div>
+    <div th:if="${!isEven}" style="background-color: blue">
+      <p th:text="${isEven}"></p>
+      <p>奇数</p>
+    </div>
+    <!-- th:eachを書いた要素「以下」の要素が繰り返しの対象 -->
+    <div th:each="a:${arr}" style="background-color: aqua">
+      <p th:text="${a}"></p>
+      <div th:switch="${a}">
+        <p th:case="1" th:text="${a}" style="background-color: red"></p>
+        <p th:case="2" th:text="${a}" style="background-color: green"></p>
+        <p th:case="3" th:text="${a}" style="background-color: blue"></p>
+        <p th:case="*" th:text="${a}" style="background-color: blueviolet"></p>
+      </div>
+    </div>
+    <!-- ${}内のシングルクォートも文字列として解釈されるようだ -->
+    <p th:text="${isEven ? '偶数' : '奇数'}"></p>
+    <p id="test"></p>
+    <p id="abc"></p>
+    <script>
+      alert("テスト");
+    </script>
+    <script th:src="@{/test-dir/test.js}"></script>
+    <script th:src="@{/test-dir/test2.js}"></script>
   </body>
 </html>

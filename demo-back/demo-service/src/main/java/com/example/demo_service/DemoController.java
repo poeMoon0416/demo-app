@@ -39,8 +39,10 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.PutMapping;
 
 // 参考: SpringBoot3プログラミング入門等
+// Cookie等を含むCORSリクエストを許可するにはallowCredentialsの指定が必要
+// https://spring.pleiades.io/spring-framework/reference/web/webmvc-cors.html#mvc-cors-credentialed-requests
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
 public class DemoController {
         @Autowired
         private DemoRepository demoRepository;

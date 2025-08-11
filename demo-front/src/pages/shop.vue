@@ -28,16 +28,17 @@
       <!-- <p>空です</p> -->
       <!-- https://vuetifyjs.com/en/styles/colors/ -->
       <!-- https://vuetifyjs.com/ja/styles/text-and-typography/#section-4f7f304465b9 -->
+      <!-- ?.(オプショナルチェーン): https://developer.mozilla.org/ja/docs/Web/JavaScript/Reference/Operators/Optional_chaining -->
       <tr>
         <td>{{ item.id }}</td>
         <td>{{ item.name }}</td>
-        <td>{{ item.sales[0].id }}</td>
+        <td>{{ item.sales[0]?.id }}</td>
         <td
           :class="{
-            'bg-grey-lighten-1 font-weight-bold': item.sales[0].price >= 1000,
+            'bg-grey-lighten-1 font-weight-bold': item.sales[0]?.price >= 1000,
           }"
         >
-          {{ item.sales[0].price }}
+          {{ item.sales[0]?.price }}
         </td>
       </tr>
     </template>

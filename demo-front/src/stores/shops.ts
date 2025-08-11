@@ -28,7 +28,7 @@ export const useShopsStore = defineStore("shops", () => {
 
   // actions
   const listCustomers = async () => {
-    fetch("http://localhost:8080/customers")
+    fetch("http://localhost:8080/customers", { credentials: "include" })
       .then((res) => res.json())
       .then((obj: Customer[]) => {
         customers.value = obj;
@@ -41,19 +41,21 @@ export const useShopsStore = defineStore("shops", () => {
 
   async function findCustomer(id: number) {
     // console.log(id);
-    const res = await fetch(`http://localhost:8080/customer?id=${id}`);
+    const res = await fetch(`http://localhost:8080/customer?id=${id}`, {
+      credentials: "include",
+    });
     const obj = await res.json();
     customers.value = [obj];
   }
 
   const findSales = async (id: number) => {
-    fetch(`http://localhost:8080/sales?id=${id}`)
+    fetch(`http://localhost:8080/sales?id=${id}`, { credentials: "include" })
       .then((res) => res.json())
       .then((obj) => (sale.value = obj));
   };
 
   const findSaleView = async (id: number) => {
-    fetch(`http://localhost:8080/sales-view/${id}`)
+    fetch(`http://localhost:8080/sales-view/${id}`, { credentials: "include" })
       .then((res) => res.json())
       .then((obj: { 売上情報ID: number; 売上高: number; 顧客名: string }) => {
         // JSONとTypeScriptのDTOのプロパティ名が異なっている場合でもマップ可能

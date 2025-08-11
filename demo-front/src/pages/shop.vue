@@ -8,7 +8,7 @@
 
   <FindCustomer />
 
-  <h2>CreateCustomer</h2>
+  <CreateCustomer />
 
   <h2>UpdateCustomer</h2>
 
@@ -17,6 +17,7 @@
 
 <script setup lang="ts">
 // imports components
+import CreateCustomer from "@/components/CreateCustomer.vue";
 import FindCustomer from "@/components/FindCustomer.vue";
 import FindSale from "@/components/FindSale.vue";
 import FindSaleView from "@/components/FindSaleView.vue";

@@ -11,6 +11,7 @@ declare module 'vue' {
     _AppFooter: typeof import('./components/_AppFooter.vue')['default']
     _HelloWorld: typeof import('./components/_HelloWorld.vue')['default']
     AppFooter: typeof import('./components/AppFooter.vue')['default']
+    CreateCustomer: typeof import('./components/CreateCustomer.vue')['default']
     FindCustomer: typeof import('./components/FindCustomer.vue')['default']
     FindSale: typeof import('./components/FindSale.vue')['default']
     FindSaleView: typeof import('./components/FindSaleView.vue')['default']

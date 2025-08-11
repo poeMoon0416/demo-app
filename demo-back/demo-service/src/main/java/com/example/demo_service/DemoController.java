@@ -36,13 +36,19 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+// import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.PutMapping;
 
 // 参考: SpringBoot3プログラミング入門等
 // Cookie等を含むCORSリクエストを許可するにはallowCredentialsの指定が必要
 // https://spring.pleiades.io/spring-framework/reference/web/webmvc-cors.html#mvc-cors-credentialed-requests
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true")
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true" /*
+                                                                           * , methods = { RequestMethod.OPTIONS,
+                                                                           * RequestMethod.HEAD, RequestMethod.GET,
+                                                                           * RequestMethod.POST, RequestMethod.PUT,
+                                                                           * RequestMethod.DELETE }
+                                                                           */)
 public class DemoController {
         @Autowired
         private DemoRepository demoRepository;
@@ -137,6 +143,10 @@ public class DemoController {
                         // res.sendError(HttpStatus.BAD_REQUEST.value(),
                         // HttpStatus.BAD_REQUEST.getReasonPhrase());
                         // return null;
+                }
+                // idが-1のままで登録しようとすると"別のトランザクションで更新中"というようなエラーが出る
+                if (customer.getId() == -1) {
+                        customer.setId(null);
                 }
                 // IDを格納したエンティティを返す
                 // ～デシリアライズ, JSONプロパティの不足～

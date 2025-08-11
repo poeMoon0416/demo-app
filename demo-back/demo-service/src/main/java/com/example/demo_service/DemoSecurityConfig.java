@@ -2,6 +2,7 @@ package com.example.demo_service;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -33,6 +34,9 @@ public class DemoSecurityConfig {
                     // WhiteLabelErrorページは許可にしないとログイン成功時に999エラー
                     .requestMatchers("/error").permitAll()
                     .requestMatchers("/login-page").permitAll()
+                    // OPTIONSメソッドではCookie等を送信できないのでこのメソッドだけ認証不要にする
+                    // このメソッド単体では基本的に何もできないようだ(変なパスマッピングつくらないようにする)
+                    .requestMatchers(HttpMethod.OPTIONS).permitAll()
                     .anyRequest().authenticated();
         });
 

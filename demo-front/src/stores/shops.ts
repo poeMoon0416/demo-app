@@ -6,10 +6,6 @@ import { defineStore } from "pinia";
 // 特に You can even use a function (similar to a component setup()) のサンプルを参照
 export const useShopsStore = defineStore("shops", () => {
   // state
-  const customers = ref<Customer[]>([]);
-
-  const customerSelections = ref<CustomerSelection[]>([]);
-
   const sale = ref<Sale>({
     id: -1,
     price: -1,
@@ -26,7 +22,31 @@ export const useShopsStore = defineStore("shops", () => {
     customerName: "",
   });
 
+  const customers = ref<Customer[]>([]);
+
+  const customerSelections = ref<CustomerSelection[]>([]);
+
   // actions
+  const findSales = async (id: number) => {
+    fetch(`http://localhost:8080/sales?id=${id}`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((obj) => (sale.value = obj));
+  };
+
+  const findSaleView = async (id: number) => {
+    fetch(`http://localhost:8080/sales-view/${id}`, { credentials: "include" })
+      .then((res) => res.json())
+      .then((obj: { 売上情報ID: number; 売上高: number; 顧客名: string }) => {
+        // JSONとTypeScriptのDTOのプロパティ名が異なっている場合でもマップ可能
+        const { 売上情報ID, 売上高, 顧客名 } = obj;
+        saleView.value = {
+          id: 売上情報ID,
+          price: 売上高,
+          customerName: 顧客名,
+        };
+      });
+  };
+
   const listCustomers = async () => {
     fetch("http://localhost:8080/customers", { credentials: "include" })
       .then((res) => res.json())
@@ -48,35 +68,15 @@ export const useShopsStore = defineStore("shops", () => {
     customers.value = [obj];
   }
 
-  const findSales = async (id: number) => {
-    fetch(`http://localhost:8080/sales?id=${id}`, { credentials: "include" })
-      .then((res) => res.json())
-      .then((obj) => (sale.value = obj));
-  };
-
-  const findSaleView = async (id: number) => {
-    fetch(`http://localhost:8080/sales-view/${id}`, { credentials: "include" })
-      .then((res) => res.json())
-      .then((obj: { 売上情報ID: number; 売上高: number; 顧客名: string }) => {
-        // JSONとTypeScriptのDTOのプロパティ名が異なっている場合でもマップ可能
-        const { 売上情報ID, 売上高, 顧客名 } = obj;
-        saleView.value = {
-          id: 売上情報ID,
-          price: 売上高,
-          customerName: 顧客名,
-        };
-      });
-  };
-
   // return
   return {
     customers,
     customerSelections,
     sale,
     saleView,
-    listCustomers,
-    findCustomer,
     findSales,
     findSaleView,
+    listCustomers,
+    findCustomer,
   };
 });

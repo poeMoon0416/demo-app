@@ -1,0 +1,14 @@
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>ログインページ</title>
+  </head>
+  <body>
+    <p th:unless="${#strings.isEmpty(msg)}" th:text="${msg}"></p>
+    <form th:action="@{/login-page}" method="post">
+      <input type="text" name="username" />
+      <input type="text" name="password" />
+      <input type="submit" value="ログイン" />
+    </form>
+  </body>
+</html>

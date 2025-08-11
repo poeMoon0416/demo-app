@@ -287,4 +287,22 @@ public class DemoController {
                 mav.addObject("format", String.class.getMethod("format", String.class, Object[].class));
                 return mav;
         }
+
+        /*
+         * BASIC認証
+         * 注意: これ自体は暗号化でないのでJSのatob()でクレデンシャルを復元できる
+         * 1.クライアントはAuthorizationヘッダーで認証方式とBASE64エンコードした"ユーザー名:パスワード"を送信
+         * 2.サーバはログイン成功時にSet-CookieヘッダーでセッションIDを送信
+         * 3.クライアントは以降のリクエストで毎回CookieヘッダーでセッションIDを送信、サーバが検証
+         */
+        @GetMapping("/login-page")
+        public ModelAndView getLoginPage(@RequestParam(name = "logout", required = false) String logout,
+                        @RequestParam(name = "error", required = false) String error,
+                        ModelAndView mav) {
+                String msg = logout != null ? "ログアウトしました" : error != null ? "ユーザー名かパスワードが誤っています" : "";
+                mav.addObject("msg", msg);
+                mav.setViewName("login-page");
+                return mav;
+        }
+
 }

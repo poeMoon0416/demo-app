@@ -32,6 +32,7 @@ public class DemoSecurityConfig {
                     // /loginと/logoutはデフォルトで許可されている
                     // WhiteLabelErrorページは許可にしないとログイン成功時に999エラー
                     .requestMatchers("/error").permitAll()
+                    .requestMatchers("/login-page").permitAll()
                     .anyRequest().authenticated();
         });
 
@@ -44,6 +45,7 @@ public class DemoSecurityConfig {
         // ログインのダイアログはどのページでもログイン失敗すると表示されるので恐らくブラウザが401 Unauthorizeで出しているもの
         httpSecurity.formLogin(form -> {
             form
+                    .loginPage("/login-page")
                     .defaultSuccessUrl("/");
         });
 

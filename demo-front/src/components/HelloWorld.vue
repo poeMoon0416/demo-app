@@ -11,7 +11,7 @@ const fetchData = ref([]);
 // const obj = await res.json()
 // fetchData.value = obj
 onMounted(async () => {
-  const res = await fetch("http://localhost:8080");
+  const res = await fetch("http://localhost:8080", { credentials: "include" });
   const obj = await res.json();
   fetchData.value = obj;
 });

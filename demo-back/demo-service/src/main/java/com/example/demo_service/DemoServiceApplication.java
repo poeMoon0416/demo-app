@@ -39,6 +39,10 @@ public class DemoServiceApplication {
 						.allowCredentials(true)
 						// 許可されていないヘッダーが存在すると403 Forbiddenになる
 						.allowedHeaders("content-type");
+				// デフォルトだとシンプルリクエストしか許可しないようなことが公式に書いてあったはずなのだが、
+				// デベロッパーツールで確認するとAllowヘッダーに全部のメソッドが入っていて実際PUTも通る
+				// 下記のように明示した場合はプリフライトリクエスト(OPTIONSメソッド)で失敗する
+				// .allowedMethods("GET", "POST");
 			}
 		};
 	}

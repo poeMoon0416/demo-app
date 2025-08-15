@@ -1,13 +1,16 @@
 <template>
   <h2>CreateCustomer</h2>
+
   <!-- 条件付きレンダリング: https://ja.vuejs.org/guide/essentials/conditional.html -->
   <p v-if="!isError && message" style="color: green">{{ message }}</p>
   <p v-if="isError && message" style="color: red">{{ message }}</p>
+
   <!-- v-form: https://vuetifyjs.com/ja/components/forms/ -->
   <v-form>
     <v-text-field v-model="name" label="顧客名" />
     <v-btn @click="createCustomer">登録</v-btn>
   </v-form>
+
   <v-data-table :items="[result]" />
 </template>
 

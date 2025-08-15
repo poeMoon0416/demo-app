@@ -29,7 +29,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 // import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -43,12 +42,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 // Cookie等を含むCORSリクエストを許可するにはallowCredentialsの指定が必要
 // https://spring.pleiades.io/spring-framework/reference/web/webmvc-cors.html#mvc-cors-credentialed-requests
 @RestController
-@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true" /*
-                                                                           * , methods = { RequestMethod.OPTIONS,
-                                                                           * RequestMethod.HEAD, RequestMethod.GET,
-                                                                           * RequestMethod.POST, RequestMethod.PUT,
-                                                                           * RequestMethod.DELETE }
-                                                                           */)
+@CrossOrigin(origins = "http://localhost:3000", allowCredentials = "true"
+/*
+ * , methods = { RequestMethod.OPTIONS,
+ * RequestMethod.HEAD, RequestMethod.GET,
+ * RequestMethod.POST, RequestMethod.PUT,
+ * RequestMethod.DELETE }
+ */)
 public class DemoController {
         @Autowired
         private DemoRepository demoRepository;
@@ -181,14 +181,19 @@ public class DemoController {
         @PutMapping("/update-customer/{id}")
         public ResponseEntity<Customer> updateCustomer(
                         // @RequestParam(name="customer") Customer customer
-                        @ModelAttribute Customer customer) {
+                        // @ModelAttribute Customer customer
+                        @RequestBody @Validated Customer customer) {
                 System.out.println("req: " + customer);
                 // 存在しないなら404 Not Found
                 if (!customerService.existsById(customer.getId())) {
                         return ResponseEntity.notFound().build();
                 }
                 // 更新後のエンティティを返す(200 OK)
+                // 関連のあるエンティティを渡しても関連自体は更新されない(Salesは[]でもそのまま)
+                // 関連も含めて渡して更新したい場合はバックエンド側でSalesの更新メソッドも別途呼び出す必要がある
                 Customer ret = customerService.updateCustomer(customer);
+                // ビューを返す代わり, 対応する販売情報が存在すると無限ループする
+                ret.setSales(null);
                 System.out.println("res: " + ret);
                 return ResponseEntity.ok().body(ret);
         }

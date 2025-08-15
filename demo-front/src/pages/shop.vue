@@ -10,7 +10,7 @@
 
   <CreateCustomer />
 
-  <h2>UpdateCustomer</h2>
+  <UpdateCustomer />
 
   <h2>DeleteCustomer</h2>
 </template>
@@ -21,4 +21,5 @@ import CreateCustomer from "@/components/CreateCustomer.vue";
 import FindCustomer from "@/components/FindCustomer.vue";
 import FindSale from "@/components/FindSale.vue";
 import FindSaleView from "@/components/FindSaleView.vue";
+import UpdateCustomer from "@/components/UpdateCustomer.vue";
 </script>

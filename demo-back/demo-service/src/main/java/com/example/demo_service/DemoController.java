@@ -22,8 +22,8 @@ import java.nio.file.Paths;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
-// import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -312,14 +312,41 @@ public class DemoController {
          * 2.サーバはログイン成功時にSet-CookieヘッダーでセッションIDを送信
          * 3.クライアントは以降のリクエストで毎回CookieヘッダーでセッションIDを送信、サーバが検証
          */
+        // バックエンド側にログインページがある場合
+        // @GetMapping("/login-page")
+        // public ModelAndView getLoginPage(@RequestParam(name = "logout", required =
+        // false) String logout,
+        // @RequestParam(name = "error", required = false) String error,
+        // ModelAndView mav) {
+        // String msg = logout != null ? "ログアウトしました" : error != null ?
+        // "ユーザー名かパスワードが誤っています" : "";
+        // mav.addObject("msg", msg);
+        // mav.setViewName("login-page");
+        // return mav;
+        // }
+
+        // フロントエンド側にログインページがある場合
         @GetMapping("/login-page")
-        public ModelAndView getLoginPage(@RequestParam(name = "logout", required = false) String logout,
-                        @RequestParam(name = "error", required = false) String error,
-                        ModelAndView mav) {
-                String msg = logout != null ? "ログアウトしました" : error != null ? "ユーザー名かパスワードが誤っています" : "";
-                mav.addObject("msg", msg);
-                mav.setViewName("login-page");
-                return mav;
+        public ResponseEntity<String> getLoginPage(@RequestParam(name = "logout", required = false) String logout,
+                        @RequestParam(name = "error", required = false) String error) {
+                String msg = logout != null ? "ログアウトしました" : error != null ? "ユーザー名かパスワードが誤っています" : "ログインに成功しました";
+
+                // クライアントエラー:
+                // https://developer.mozilla.org/ja/docs/Web/HTTP/Reference/Status#%E3%82%AF%E3%83%A9%E3%82%A4%E3%82%A2%E3%83%B3%E3%83%88%E3%82%A8%E3%83%A9%E3%83%BC%E3%83%AC%E3%82%B9%E3%83%9D%E3%83%B3%E3%82%B9
+                // 401 Unauthorized: 未認証(認証失敗), 例えばログイン時にユーザー名かパスワードが誤っている
+                // 403 Forbidden: 権限なし(認可失敗), 例えばユーザー権限で管理者権限が必要なページにアクセスしようとした
+                if (error != null) {
+                        // 401 Unauthorizedにするとブラウザがログインダイアログを表示してしまうので403 Forbiddenを返す
+                        // HttpStatus:
+                        // https://spring.pleiades.io/spring-framework/docs/current/javadoc-api/org/springframework/http/HttpStatus.html
+                        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                                        // .header("WWW-Authenticate", "Basic realm=\"Realm\"")
+                                        // ResponseEntityは中身がStringだとContent-Type: text/plain;charset=UTF-8になる
+                                        .body(msg);
+                }
+
+                // 注意: ログインページがボディとして優先されるのでmsgが入らない
+                return ResponseEntity.ok().body(msg);
         }
 
 }

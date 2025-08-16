@@ -53,6 +53,10 @@ public class DemoSecurityConfig {
                     .defaultSuccessUrl("/");
         });
 
+        // ログインを処理するPOSTのURLにCORS設定が入らないので, Spring MVCのCORS設定をSpring Security側でも利用する
+        // https://docs.spring.io/spring-security/reference/servlet/integrations/cors.html
+        httpSecurity.cors(Customizer.withDefaults());
+
         return httpSecurity.build();
     }
 

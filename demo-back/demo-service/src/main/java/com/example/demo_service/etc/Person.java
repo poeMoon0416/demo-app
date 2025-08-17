@@ -41,7 +41,8 @@ public class Person {
 
     /** 体重 */
     @Column(name = "WEIGHT", nullable = false)
-    // {0}はちょっと分かりにくいと思ってしまった...
+    // {0}はちょっと分かりにくいと思ってしまった... -> 下記より使用しない
+    // Vueからも認識できない、この{0}とかってテンプレートエンジン(Thymeleaf)しかみえないのかも
     @Min(value = 40, message = "{0}は{value}以上にしてください")
     @Max(120)
     Integer weight;

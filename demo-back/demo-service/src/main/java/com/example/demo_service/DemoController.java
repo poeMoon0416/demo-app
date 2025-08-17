@@ -404,4 +404,32 @@ public class DemoController {
                 return getCreatePerson(person, mav);
         }
 
+        // RESTバリデーション検証(GET)
+        @GetMapping("/rest-list-person")
+        public List<Person> getRestListPerson() {
+                return personService.list();
+        }
+
+        // APIテスト: CookieにJSESSIONID, Content-Type: application/json, bodyはdev-tool
+        // RESTバリデーション検証(POST), ここで@Validatedにして実際に検証する
+        @PostMapping("/rest-create-person")
+        public ResponseEntity<List<String>> postRestCreatePerson(@RequestBody @Validated Person person,
+                        BindingResult bindingResult) {
+
+                // バリデーションエラーがあったらエラーメッセージを送信する
+                if (bindingResult.hasErrors()) {
+                        return ResponseEntity.badRequest().body(bindingResult
+                                        .getFieldErrors()
+                                        .stream()
+                                        .map(fieldError -> fieldError.getDefaultMessage())
+                                        .toList());
+                }
+
+                // バリデーションエラーがなければ作成
+                personService.save(person);
+                return ResponseEntity
+                                .created(URI.create("http://localhost:3000/person"))
+                                .body(List.of("個人情報の作成完了"));
+        }
+
 }

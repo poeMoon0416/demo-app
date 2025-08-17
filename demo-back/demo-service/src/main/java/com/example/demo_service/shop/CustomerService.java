@@ -4,8 +4,12 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
+// https://spring.pleiades.io/spring-framework/docs/current/javadoc-api/org/springframework/transaction/annotation/Transactional.html
+// RuntimeExceptionかErrorでロールバックされるようだ
+@Transactional
 public class CustomerService {
     @Autowired
     private CustomerRepository customerRepository;

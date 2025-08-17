@@ -1,0 +1,69 @@
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <title>create-person</title>
+  </head>
+  <body>
+    <h1>create-person</h1>
+
+    <h2>個人情報作成</h2>
+    <form th:action="@{/create-person}" method="post" th:object="${person}">
+      <ul>
+        <!-- #fields: https://www.thymeleaf.org/doc/tutorials/2.1/thymeleafspring.html -->
+        <!-- formの中でないとエラーメッセージを取得できないので注意(どのオブジェクトのエラーメッセージかをth:objectで判別している？) -->
+        <!-- ${#fileds}はth:objectのフィールドに対する操作をまとめた式ユーティリティオブジェクトのようだ -->
+        <li
+          th:each="error: ${#fields.detailedErrors()}"
+          th:text="${error.message}"
+          style="color: red"
+        ></li>
+      </ul>
+
+      <div>
+        <label for="email">メールアドレス</label>
+        <input type="text" name="email" th:value="*{email}" />
+      </div>
+
+      <div>
+        <label for="weight">体重</label>
+        <input type="number" name="weight" th:value="*{weight}" />
+      </div>
+
+      <div>
+        <label for="profile">自己紹介</label>
+        <textarea name="profile" th:text="*{profile}"></textarea>
+      </div>
+
+      <div>
+        <label for="prefecture">出身地(都道府県)</label>
+        <input type="text" name="prefecture" th:value="*{prefecture}" />
+      </div>
+
+      <input type="submit" value="作成" />
+    </form>
+
+    <h2>個人情報一覧</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>メールアドレス</th>
+          <th>体重</th>
+          <th>自己紹介</th>
+          <th>出身地(都道府県)</th>
+          <th>作成日時</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="person: ${persons}" th:object="${person}">
+          <td th:text="*{id}"></td>
+          <td th:text="*{email}"></td>
+          <td th:text="*{weight}"></td>
+          <td th:text="*{profile}"></td>
+          <td th:text="*{prefecture}"></td>
+          <td th:text="*{createdDateTime}"></td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

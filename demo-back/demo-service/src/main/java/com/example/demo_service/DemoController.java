@@ -4,6 +4,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.example.demo_service.etc.Person;
+import com.example.demo_service.etc.PersonService;
 import com.example.demo_service.shop.Customer;
 import com.example.demo_service.shop.CustomerService;
 import com.example.demo_service.shop.DemoRepository;
@@ -13,11 +15,14 @@ import com.example.demo_service.shop.SaleView;
 
 // import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URLEncoder;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 // import java.util.ArrayList;
 import java.util.List;
 
@@ -25,10 +30,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 // import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -37,6 +45,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 // import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 // 参考: SpringBoot3プログラミング入門等
 // Cookie等を含むCORSリクエストを許可するにはallowCredentialsの指定が必要
@@ -49,6 +59,9 @@ import org.springframework.web.bind.annotation.PutMapping;
  * RequestMethod.POST, RequestMethod.PUT,
  * RequestMethod.DELETE }
  */)
+@RequiredArgsConstructor
+// logというフィールド名でロガーを自動生成するLombokのアノテーション
+@Slf4j
 public class DemoController {
         @Autowired
         private DemoRepository demoRepository;
@@ -65,6 +78,8 @@ public class DemoController {
         @Autowired
         private SaleService saleService;
 
+        private final PersonService personService;
+
         @GetMapping("/")
         public List<DemoDto> findAll() {
                 // DemoDto dd = new DemoDto(3, "abc");
@@ -77,6 +92,8 @@ public class DemoController {
                 // return strs;
                 // return new ArrayList<DemoDto>(List.of(new DemoDto(1, "abc"), new DemoDto(2,
                 // "def"), new DemoDto(3, "ghi")));
+                // フィールドインジェクションだと下記のように後から上書きできてしまう
+                // customerService = new CustomerService();
                 return demoRepository.findAll();
         }
 
@@ -347,6 +364,44 @@ public class DemoController {
 
                 // 注意: ログインページがボディとして優先されるのでmsgが入らない
                 return ResponseEntity.ok().body(msg);
+        }
+
+        // バリデーション検証(GET), この時点ではPersonが未設定なので@Validatedにしない
+        @RequestMapping("/create-person")
+        public ModelAndView getCreatePerson(@ModelAttribute("person") Person person, ModelAndView mav) {
+                mav.addObject("persons", personService.list());
+                mav.setViewName("create-person");
+                return mav;
+        }
+
+        // バリデーション検証(POST), ここで@Validatedにして実際に検証する
+        @RequestMapping(path = "/create-person", method = RequestMethod.POST)
+        public ModelAndView postCreatePerson(@ModelAttribute("person") @Validated Person person,
+                        // https://docs.spring.io/spring-framework/reference/core/validation.html
+                        // ModelAndViewを先に書くとそこでエラーレスポンスが返ってしまうので注意
+                        BindingResult bindingResult, ModelAndView mav) {
+                if (bindingResult.hasErrors()) {
+                        System.out.println("バリデーション検証します");
+                        List<ObjectError> objectErrors = new ArrayList<ObjectError>(bindingResult.getErrorCount());
+                        // Slf4jを使うとタイムスタンプとログ出力しているクラスの情報を出力できる
+                        log.info("バリデーションエラー数: {}", bindingResult.getErrorCount());
+                        // グローバルエラーとフィールドエラーがあり、getFieldErros()でもフィールドの全てのエラーを取得できる
+                        for (ObjectError objectError : bindingResult.getFieldErrors()) {
+                                // for (ObjectError objectError : bindingResult.getAllErrors()) {
+                                objectErrors.add(objectError);
+                        }
+                        // そのまま表示するとデフォルトメッセージだけでなくコード等も含むかたちで出てくる
+                        // バリデーションエラーの順番はランダム
+                        // 注意: バックエンド側でエラーメッセージの{0}や{1}を解決できない、これは使わない方が良さそう
+                        log.info("バリデーションエラーの内容: {}", objectErrors
+                                        .stream()
+                                        .map(objectError -> objectError.getDefaultMessage())
+                                        .toList());
+                        System.out.println();
+                        return getCreatePerson(person, mav);
+                }
+                personService.save(person);
+                return getCreatePerson(person, mav);
         }
 
 }
